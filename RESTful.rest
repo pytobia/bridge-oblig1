@@ -1,0 +1,105 @@
+POST http://localhost:3000/register
+{"name": "Jobim"}
+
+###
+
+POST http://localhost:3000/register
+{"name": "Joao"}
+
+###
+
+POST http://localhost:3000/register
+{"name": "Abognale"}
+
+###
+
+POST http://localhost:3000/register
+{"name": "Bojangles"}
+
+###
+
+POST http://localhost:3000/start
+
+###
+
+POST http://localhost:3000/restart
+
+###
+
+GET http://localhost:3000/players
+
+###
+
+GET http://localhost:3000/teams
+
+###
+
+POST http://localhost:3000/bid Content-Type: application/json
+
+{
+    "player": "Jobim", "bid": ["Spades", "Ace"]
+
+}
+
+###
+
+POST http://localhost:3000/bid Content-Type: application/json
+
+{
+    "player": "Joao", "bid": ["Clubs", "Jack"]
+
+}
+
+###
+
+POST http://localhost:3000/bid Content-Type: application/json
+
+{
+    "player": "Abognale", "bid": ["Diamonds", 10]
+
+}
+
+###
+
+POST http://localhost:3000/bid Content-Type: application/json
+
+{
+    "player": "Bojangles", "bid": ["Hearts", 6]
+
+}
+
+###
+
+POST http://localhost:3000/addplayer Content-Type: application/json
+
+{
+    "name": "Jobim"
+
+}
+
+###
+
+POST http://localhost:3000/addplayer Content-Type: application/json
+
+{
+    "name": "Joao"
+
+}
+
+###
+
+POST http://localhost:3000/addplayer Content-Type: application/json
+
+{
+    "name": "Abognale"
+
+}
+
+###
+
+POST http://localhost:3000/addplayer Content-Type: application/json
+
+{
+    "name": "Bojangles"
+
+}
