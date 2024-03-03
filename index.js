@@ -72,24 +72,31 @@ app.post('/play', (req, res) => {
     player.hand = player.hand.filter(c => c !== card);
     res.status(200).send(`${playerName} spilte ${card}.`);
 });
+// Gammel /bid script byttet ut med et bedre lengre nede
+/*
 app.post('/bid', (req, res) => {
-    if (!gameRunning) {
-        return res.status(400).send('Spillet er ikke startet.');
-    }
-    const { player, bid } = req.body;
-    const playerObj = players.find(p => p.name === player);
-    if (!playerObj) {
-        return res.status(404).send('Spiller ikke funnet.');
-    }
-    // Anta at bid er en array med [suit, rank]
-    const [suit, rank] = bid;
-    // Implementer logikk for å validere og håndtere budet her
-    // For demonstrasjon, antar vi at alle bud er gyldige
-    console.log(`${player} bød ${rank} av ${suit}.`);
-    // Oppdater spilltilstanden basert på budet
-    // Dette er et eksempel og må utvides basert på dine spilleregler
-    res.status(200).send(`${player} bød ${rank} av ${suit}.`);
+  if (!gameRunning) {
+    return res.status(400).send('Spillet er ikke startet.');
+  }
+
+  const { player, bid } = req.body;
+  const playerObj = players.find(p => p.name === player);
+
+  if (!playerObj) {
+    return res.status(404).send('Spiller ikke funnet.');
+  }
+
+  // Anta at bid er en array med [suit, rank]
+  const [suit, rank] = bid;
+
+  // Implementer logikk for å validere og håndtere budet her
+  // For demonstrasjon, antar vi at alle bud er gyldige
+  console.log(`${player} bød ${rank} av ${suit}.`);
+
+  // Oppdater spilltilstanden basert på budet
+  res.status(200).send(`${player} bød ${rank} av ${suit}.`);
 });
+*/
 // Restart funksjon for å teste nye endringer
 app.post('/restart', (req, res) => {
     // Tilbakestill spilltilstanden
@@ -124,6 +131,27 @@ app.get('/teams', (req, res) => {
     };
     res.status(200).json(teams);
 });
+// Budgivningslogikk
+app.post('/bid', (req, res) => {
+    if (!gameRunning) {
+        return res.status(400).send('Spillet er ikke startet.');
+    }
+    const { player, bid } = req.body;
+    // Anta foreløpig at alle bud er gyldige
+    console.log(`${player} bød ${bid}.`);
+    // Lagre budet i budhistorikken
+    bidsHistory.push({ player, bid });
+    // Sjekk om budet følger de enkle reglene (implementer denne logikken)
+    const bidFollowsRules = true; // Forenklet for demonstrasjon
+    if (!bidFollowsRules) {
+        // Marker budet som trenger forklaring og vent på makkerens respons
+        // Dette kan implementeres ved å sende en spesifikk respons tilbake og håndtere den i klienten
+        return res.status(400).send(`Budet ${bid} fra ${player} trenger forklaring fra makker.`);
+    }
+    res.status(200).send(`${player} bød ${bid}.`);
+});
+// Lagre budhistorikk
+let bidsHistory = [];
 app.listen(port, () => {
     console.log(`Serveren kjører på http://localhost:${port}`);
 });

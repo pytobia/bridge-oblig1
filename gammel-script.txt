@@ -1,0 +1,206 @@
+
+import express from 'express';
+import path from 'path';
+
+const app = express();
+app.use(express.json());
+const port = 3000; 
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(port, () => {
+  console.log(`Serveren kjører på http://localhost:${port}`);
+});
+
+
+interface Player {
+    id: string;
+    name: string;
+    hand: Card[];
+  }
+  
+  interface Card {
+    suit: 'Hearts' | 'Diamonds' | 'Clubs' | 'Spades';
+    value: '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | 'Jack' | 'Queen' | 'King' | 'Ace';
+  }
+  
+  interface Deck {
+    cards: Card[];
+  }
+  
+  class Game {
+    players: Player[] = [];
+    deck: Deck;
+    currentBid: string | null = null; // Tillater null som gyldig verdi
+    // Mer kompleks logikk vil være nødvendig her
+
+    constructor(deck: Deck) {
+      this.deck = deck;
+      // Initialiser spillet med en blandet kortstokk
+    }
+
+    // Metoder for å håndtere spilllogikk
+  }
+  
+  // En funksjon for å opprette en ny kortstokk kunne se slik ut:
+  function createDeck(): Deck {
+    const suits: Card['suit'][] = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+    const values: Card['value'][] = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'];
+  
+    const deck: Card[] = [];
+  
+    suits.forEach((suit) => {
+      values.forEach((value) => {
+        deck.push({ suit, value });
+      });
+    });
+  
+    return { cards: deck };
+  }
+
+  const players: Player[] = [];
+let game: Game | null = null;
+
+
+// Registrering av spillere
+
+app.post('/register', (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).send('Navn er påkrevd');
+  }
+
+  const newPlayer: Player = { id: String(players.length + 1), name, hand: [] };
+  players.push(newPlayer);
+  res.status(201).json(newPlayer);
+});
+
+
+// Krever 4 spillere for å starte
+
+app.post('/start', (req, res) => {
+  if (players.length < 4) {
+    return res.status(400).send('Trenger minst 4 spillere for å starte et spill');
+  }
+
+  const deck = createDeck();
+  // Bland kortstokken
+  deck.cards.sort(() => Math.random() - 0.5);
+
+  // Distribuer kort til spillere
+  players.forEach((player, index) => {
+    player.hand = deck.cards.slice(index * 13, (index + 1) * 13);
+  });
+
+  game = new Game(deck);
+  res.status(200).send('Spillet er startet');
+});
+
+app.get('/player/:id/hand', (req, res) => {
+  const { id } = req.params;
+  const player = players.find(player => player.id === id);
+
+  if (!player) {
+    return res.status(404).send('Spiller ikke funnet');
+  }
+
+  res.status(200).json(player.hand);
+});
+
+
+
+// Meldesystem
+
+interface Bid {
+  playerID: string;
+  bid: string; // Dette kan være "pass", "double", "redouble", eller et bud som "1 Heart"
+}
+
+// Remove the duplicate declaration of the 'Game' class
+// class Game {
+//   players: Player[];
+//   deck: Deck;
+//   currentBid: Bid | null;
+//   currentPlayer: Player | null;
+//   deck: Deck; // Add the 'deck' property with type 'Deck'
+
+//   constructor() {
+//     this.players = [];
+//     this.deck = { cards: [] }; // Initialize the 'deck' property as an empty array of type 'Deck'
+//     this.currentBid = null;
+//     this.currentPlayer = null;
+//   }
+
+//   // Add methods to handle game logic here
+//   isPlayersTurn(playerID: string): boolean {
+//     return this.currentPlayer && this.currentPlayer.id === playerID;
+//   }
+
+//   isValidBid(bid: string): boolean {
+//     // Add your bid validation logic here
+//     // For now, let's just check if the bid is one of the allowed values
+//     const validBids = ["pass", "double", "redouble", "1 Heart", "2 Heart", "3 Heart", "4 Heart"];
+//     return validBids.includes(bid);
+//   }
+
+//   addBid(bid: Bid) {
+//     this.currentBid = bid;
+//     // Update the current player to the next player
+//     const currentPlayerIndex = this.players.findIndex(player => player.id === bid.playerID);
+//     this.currentPlayer = this.players[(currentPlayerIndex + 1) % this.players.length];
+//   }
+// }
+
+// Remove the existing declaration of 'game'
+// const game = new Game();
+
+// Declare 'game' outside of the selection
+let game: Game;
+
+// Remove the existing declaration of 'Game'
+// class Game {
+//   // Existing code...
+// }
+
+class Game {
+  // Existing code...
+
+  isPlayersTurn(playerID: string): boolean {
+    // Add your logic to determine if it's the player's turn
+    // For now, let's assume it's always the player's turn
+    return true;
+  }
+
+  isValidBid(bid: string): boolean {
+    // Add your bid validation logic here
+    // For now, let's just check if the bid is one of the allowed values
+    const validBids = ["pass", "double", "redouble", "1 Heart", "2 Heart", "3 Heart", "4 Heart"];
+    return validBids.includes(bid);
+  }
+
+  addBid(bid: Bid) {
+    this.currentBid = bid;
+    // Update the current player to the next player
+    const currentPlayerIndex = this.players.findIndex(player => player.id === bid.playerID);
+    this.currentPlayer = this.players[(currentPlayerIndex + 1) % this.players.length];
+  }
+
+  // Existing code...
+}
+
+class Game {
+  // Existing code...
+
+  isPlayersTurn(playerID: string): boolean {
+    // Add your logic to determine if it's the player's turn
+    // For now, let's assume it's always the player's turn
+    return true;
+  }
+
+  // Existing code...
+}
+
+Ble bare tull med denne koden til slutt, prøvde å bruke copilot litt men ble bare en haug med errors
+Så prøver på nytt og prøver å holde det enklest mulig
