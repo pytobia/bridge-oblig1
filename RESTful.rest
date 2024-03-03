@@ -83,3 +83,15 @@ GET http://localhost:3000/players
 ###
 
 GET http://localhost:3000/teams
+
+
+###
+
+POST http://localhost:3000/bid
+Content-Type: application/json
+
+{
+    "player": "Makkers navn",
+    "bid": "Forklaring på tidligere bud",
+    "isExplanation": true
+}
